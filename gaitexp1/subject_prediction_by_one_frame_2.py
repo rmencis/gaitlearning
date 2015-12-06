@@ -5,7 +5,6 @@ import random
 labelCount = 11
 
 def readData(dataFilePath):
-
     data = []
     labels = []
     with open(dataFilePath, 'rb') as f:
@@ -47,8 +46,8 @@ b = tf.Variable(tf.zeros([outputUnitCount]))
 sess.run(tf.initialize_all_variables())
 
 y = tf.nn.softmax(tf.matmul(x,W) + b)
-cross_entropy = -tf.reduce_sum(y_*tf.log(y))
-train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+crossEntropy = -tf.reduce_sum(y_ * tf.log(y))
+trainStep = tf.train.GradientDescentOptimizer(0.01).minimize(crossEntropy)
 
 batchSize = 100
 for i in range(10000):
@@ -57,19 +56,12 @@ for i in range(10000):
     trainDataEndIndex = min(trainDataStartIndex+batchSize,len(trainingData))
     dataRows = trainingData[trainDataStartIndex:trainDataEndIndex]
     labelRows = trainingLabels[trainDataStartIndex:trainDataEndIndex]
-    train_step.run(feed_dict={x: dataRows, y_: labelRows})
+    trainStep.run(feed_dict={x: dataRows, y_: labelRows})
 
-correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+correctPrediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
 print
 print 'Accuracy on training data: {}'.format(accuracy.eval(feed_dict={x: trainingData, y_: trainingLabels}))
 print 'Accuracy on test data: {}'.format(accuracy.eval(feed_dict={x: testData, y_: testLabels}))
-#print 'Accuracy {}'.format(accuracy.eval(feed_dict={x: testData, y_: trainingLabels[0:len(testLabels)]}))
-
-# Test
-#for i in range(len(testData)):
-#    dataRow = testData[i]
-#    label = testLabels[i]
-
 
 sess.close()
