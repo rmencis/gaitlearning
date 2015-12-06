@@ -71,7 +71,7 @@ def produceFeatureFile(baseDirPath,trial,includeSampleWithProbability,outputDirP
         with open(dataFilePath, 'rb') as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
-                features = row[2:142]
+                features = row[2:143]
                 if counter == 0:
                     features.append('Subject')
                     csvWriter.writerow(features)
@@ -101,24 +101,25 @@ def mergeCSVFiles(dirPath,outputFilePath):
         for row in rows:
             writer.writerow(row)
 
-trials = [9,10,11,12,13,14,15,16,17,18,19,20,21,25,26,27,31,32,33,40,41,42]
+trainingTrials = [10,11,12,13,15,16,18,19,20,25,27,32,33,40,41]
+testTrials = [9,14,17,21,26,31,42]
 
-featureFileDirPath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files'
-finalFeatureFilePath = '/Users/rmencis/RUG/Machine_Learning/project/final_feature_files/data.csv'
+baseDirPath = '/Users/rmencis/RUG/Machine_Learning/project'
+gaitDirPath = os.path.join(baseDirPath,'perturbed-walking-data-01')
+trainingFileDirPath = os.path.join(baseDirPath,'feature_files/train')
+testFileDirPath = os.path.join(baseDirPath,'feature_files/test')
+finalTrainingFilePath = os.path.join(baseDirPath,'feature_files/train_data.csv')
+finalTestFilePath = os.path.join(baseDirPath,'feature_files/test_data.csv')
 
-#for trial in trials:
-#    print trial
-#    produceFeatureFile('/Users/rmencis/RUG/Machine_Learning/project/perturbed-walking-data-01',trial,0.01,featureFileDirPath)
+for trial in trainingTrials:
+    print 'Reading training trial',trial
+    produceFeatureFile(gaitDirPath,trial,0.01,trainingFileDirPath)
 
-mergeCSVFiles(featureFileDirPath,finalFeatureFilePath)
+for trial in testTrials:
+    print 'Reading test trial',trial
+    produceFeatureFile(gaitDirPath,trial,0.01,testFileDirPath)
 
-#printTrialData('/Users/rmencis/RUG/Machine_Learning/project/perturbed-walking-data-01',1,45)
-
-#print produceFeatureFile('/Users/rmencis/RUG/Machine_Learning/project/perturbed-walking-data-01',31,0.01,'/Users/rmencis/RUG/Machine_Learning/project/feature_files')
-
-#print getMetaData('/Users/rmencis/RUG/Machine_Learning/project/perturbed-walking-data-01/T031/meta-031.yml').trial.id
-
-#hello = tf.constant('Hello, TensorFlow!')
-#sess = tf.Session()
-#print sess.run(hello)
-
+print 'Mergin training files'
+mergeCSVFiles(trainingFileDirPath,finalTrainingFilePath)
+print 'Mergin test files'
+mergeCSVFiles(testFileDirPath,finalTestFilePath)
