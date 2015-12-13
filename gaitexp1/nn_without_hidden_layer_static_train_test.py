@@ -11,6 +11,7 @@ def readData(dataFilePath):
         reader = csv.reader(f)
         reader.next() # Skip header
         for row in reader:
+            #dataRow = row[0:21]
             dataRow = row[0:len(row)-1]
             [float(i) for i in dataRow]
             label = int(row[len(row)-1])
@@ -26,6 +27,17 @@ testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files/te
 
 trainingData,trainingLabels = readData(trainDataFilePath)
 testData,testLabels = readData(testDataFilePath)
+
+# for trainRow in trainingData:
+#     delta = random.gauss(0,0.1)
+#     for i in range(0,len(trainRow)):
+#         trainRow[i] = float(trainRow[i]) + delta
+#
+#
+# for testRow in testData:
+#     delta = random.gauss(0,0.5)
+#     for i in range(0,len(testRow)):
+#         testRow[i] = float(testRow[i]) + delta
 
 # Training
 
@@ -50,7 +62,7 @@ crossEntropy = -tf.reduce_sum(y_ * tf.log(y))
 trainStep = tf.train.GradientDescentOptimizer(0.01).minimize(crossEntropy)
 
 batchSize = 100
-for i in range(10000):
+for i in range(2000):
     print 'Training batch:',i
     trainDataStartIndex = random.randrange(len(trainingData))
     trainDataEndIndex = min(trainDataStartIndex+batchSize,len(trainingData))
