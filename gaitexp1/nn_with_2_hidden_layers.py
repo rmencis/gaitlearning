@@ -8,13 +8,13 @@ import math
 labelCount = 11
 
 def weight_variable(shape):
-  #initial = tf.truncated_normal(shape, stddev=0.1)
-  initial = tf.random_normal(shape)
+  initial = tf.truncated_normal(shape, stddev=0.1)
+  #initial = tf.random_normal(shape)
   return tf.Variable(initial)
 
 def bias_variable(shape):
-  #initial = tf.constant(0.1, shape=shape)
-  initial = tf.random_normal(shape)#
+  initial = tf.constant(0.1, shape=shape)
+  #initial = tf.random_normal(shape)#
   return tf.Variable(initial)
 
 def readData(dataFilePath):
@@ -42,28 +42,36 @@ trainData, trainLabels = readData(trainDataFilePath)
 testData,testLabels = readData(testDataFilePath)
 
 inputUnitCount = len(trainData[0])
-hiddenUnitCount = 10
+hidden1UnitCount = 20
+hidden2UnitCount = 5
 outputUnitCount = labelCount
 
 minValueInput = -1/math.sqrt(inputUnitCount)
 maxValueInput = 1/math.sqrt(inputUnitCount)
-minValueHidden = -1/math.sqrt(hiddenUnitCount)
-maxValueHidden = 1/math.sqrt(hiddenUnitCount)
+minValueHidden1 = -1/math.sqrt(hidden1UnitCount)
+maxValueHidden1 = 1/math.sqrt(hidden1UnitCount)
+minValueHidden2 = -1/math.sqrt(hidden2UnitCount)
+maxValueHidden2 = 1/math.sqrt(hidden2UnitCount)
 
 print 'Training samples:',len(trainData)
 print 'Test samples:',len(testData)
 print 'Features:',len(trainData[0])
 
 x = tf.placeholder(tf.float32, [None, inputUnitCount]) # Input data
-W1 = tf.Variable(tf.random_uniform([inputUnitCount, hiddenUnitCount],minval=minValueInput,maxval=maxValueInput))
-b1 = tf.Variable(tf.random_uniform([hiddenUnitCount],minval=minValueInput,maxval=maxValueInput))
+W1 = weight_variable([inputUnitCount, hidden1UnitCount])
+b1 = bias_variable([hidden1UnitCount])
 
-y1 = tf.tanh(tf.matmul(x, W1) + b1)
+y1 = tf.nn.relu(tf.matmul(x, W1) + b1)
 
-W2 = tf.Variable(tf.random_uniform([hiddenUnitCount, outputUnitCount],minval=minValueHidden,maxval=maxValueHidden))
-b2 = tf.Variable(tf.random_uniform([outputUnitCount],minval=minValueHidden,maxval=maxValueHidden))
+W2 = weight_variable([hidden1UnitCount, hidden2UnitCount])
+b2 = bias_variable([hidden2UnitCount])
 
-y = tf.nn.softmax(tf.matmul(y1, W2) + b2)
+y2 = tf.nn.relu(tf.matmul(y1, W2) + b2)
+
+W3 = weight_variable([hidden2UnitCount, outputUnitCount])
+b3 = bias_variable([outputUnitCount])
+
+y = tf.nn.softmax(tf.matmul(y2, W3) + b3)
 
 y_ = tf.placeholder(tf.float32, [None, outputUnitCount])
 
@@ -71,13 +79,15 @@ crossEntropy = -tf.reduce_sum(y_ * tf.log(y))
 
 globalStep = tf.Variable(0, trainable=False)
 starterLearningRate = 0.001
-learningRate = tf.maximum(tf.train.exponential_decay(starterLearningRate, globalStep, 100, 0.995, staircase=True),0.00001)
+learningRate = tf.maximum(tf.train.exponential_decay(starterLearningRate, globalStep,100, 0.995, staircase=True),0.00001)
 optimizer = tf.train.GradientDescentOptimizer(learningRate)
 trainStep = optimizer.minimize(crossEntropy, global_step=globalStep)
+#trainStep = tf.train.AdamOptimizer(1e-4).minimize(crossEntropy)
 
 init = tf.initialize_all_variables()
 
 sess = tf.Session()
+
 sess.run(init)
 
 batchSize = 100
