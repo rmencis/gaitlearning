@@ -22,8 +22,8 @@ def readData(dataFilePath):
     return data,labels
 
 # Read data
-trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_2/train_data.csv'
-testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_2/test_data.csv'
+trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/train_data.csv'
+testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/test_data.csv'
 
 trainData, trainLabels = readData(trainDataFilePath)
 testData,testLabels = readData(testDataFilePath)
@@ -48,21 +48,23 @@ sess.run(tf.initialize_all_variables())
 
 y = tf.nn.softmax(tf.matmul(x,W) + b)
 crossEntropy = -tf.reduce_sum(y_ * tf.log(y))
-trainStep = tf.train.GradientDescentOptimizer(0.001).minimize(crossEntropy)
+trainStep = tf.train.GradientDescentOptimizer(0.01).minimize(crossEntropy)
 
-batchSize = 1000
+batchSize = 100
 for i in range(100000):
     trainDataStartIndex = random.randrange(len(trainData)-batchSize)
     trainDataEndIndex = trainDataStartIndex + batchSize
     dataRows = trainData[trainDataStartIndex:trainDataEndIndex]
     labelRows = trainLabels[trainDataStartIndex:trainDataEndIndex]
     trainStep.run(feed_dict={x: dataRows, y_: labelRows})
-    if (i % 100 == 99):
+    if (i % 100 == 0):
         correctPrediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
         accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
-        print '{}. Training : {}, Test: {}, Loss: {}'.format(i, sess.run(accuracy, feed_dict={x: trainData, y_: trainLabels}),
+        print '{}. Training accuracy: {}, Test accuracy: {}, Cross-entropy loss: {}'.format(i, sess.run(accuracy, feed_dict={x: trainData, y_: trainLabels}),
                                                    sess.run(accuracy, feed_dict={x: testData, y_: testLabels}),
                                                              sess.run(crossEntropy, feed_dict={x: trainData, y_: trainLabels}))
-
+        #with open("/Users/rmencis/RUG/Machine_Learning/project/weights.csv", "wb") as f:
+        #    writer = csv.writer(f)
+        #    writer.writerows(sess.run(W))
 
 sess.close()

@@ -29,7 +29,7 @@ def produceFeatureFile(baseDirPath,trial,probability,outputDirPath):
     stepSize = 1 # Take every STEP_SIZE frame
     stepCount = 500 # Take total STEP_COUNT frames
     windowSize = stepSize * stepCount
-    cols = [122]
+    cols = [6]
 
     with open(outputFilePath, 'wb') as outputCSVFile:
         csvWriter = csv.writer(outputCSVFile)

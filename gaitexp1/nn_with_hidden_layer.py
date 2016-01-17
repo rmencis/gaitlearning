@@ -35,14 +35,14 @@ def readData(dataFilePath):
     return data,labels
 
 # Read data
-trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_2/train_data.csv'
-testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_2/test_data.csv'
+trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/train_data.csv'
+testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/test_data.csv'
 
 trainData, trainLabels = readData(trainDataFilePath)
 testData,testLabels = readData(testDataFilePath)
 
 inputUnitCount = len(trainData[0])
-hiddenUnitCount = 10
+hiddenUnitCount = 50
 outputUnitCount = labelCount
 
 minValueInput = -1/math.sqrt(inputUnitCount)

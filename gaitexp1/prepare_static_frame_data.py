@@ -30,7 +30,7 @@ def produceFeatureFile(baseDirPath,trial,includeSampleWithProbability,outputDirP
                 counter += 1
     return
 
-trainingTrials = [10,11,12,13,15,16,18,19,20,25,27,32,33,40,41]
+trainingTrials = [10,11,12,13,16,18,19,20,25,27,32,33,40,41]
 testTrials = [9,14,17,21,26,31,42]
 
 baseDirPath = '/Users/rmencis/RUG/Machine_Learning/project'
