@@ -47,6 +47,13 @@ def getMetaData(metaFilePath):
 
     return metaData
 
+def getMetaDataForTrial(gaitTrialBasePath,trial):
+    dirPath = os.path.join(gaitTrialBasePath,'T' + str(trial).zfill(3))
+    metaFilePath = os.path.join(dirPath,'meta-' + str(trial).zfill(3)+".yml")
+
+    return getMetaData(metaFilePath)
+
+
 def printTrialData(baseDirPath,fromTrial,toTrial):
     for trial in range(fromTrial,toTrial):
         dirPath = os.path.join(baseDirPath,'T' + str(trial).zfill(3))
@@ -73,3 +80,4 @@ def mergeCSVFiles(dirPath,outputFilePath):
         writer.writerow(headerRow)
         for row in rows:
             writer.writerow(row)
+

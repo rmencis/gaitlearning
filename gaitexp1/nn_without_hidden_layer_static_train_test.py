@@ -22,8 +22,8 @@ def readData(dataFilePath):
     return data,labels
 
 # Read data
-trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/train_data.csv'
-testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_3/test_data.csv'
+trainDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_8/train_data.csv'
+testDataFilePath = '/Users/rmencis/RUG/Machine_Learning/project/feature_files_8/test_data.csv'
 
 trainData, trainLabels = readData(trainDataFilePath)
 testData,testLabels = readData(testDataFilePath)
@@ -44,6 +44,12 @@ y_ = tf.placeholder(tf.float32, shape=[None, outputUnitCount])
 W = tf.Variable(tf.random_uniform([inputUnitCount,outputUnitCount],minval=-1,maxval=1))
 b = tf.Variable(tf.random_uniform([outputUnitCount],minval=-1,maxval=1))
 
+#W = tf.Variable(tf.random_normal([inputUnitCount,outputUnitCount]))
+#b = tf.Variable(tf.random_normal([outputUnitCount]))
+
+#W = tf.Variable(tf.zeros([inputUnitCount,outputUnitCount]))
+#b = tf.Variable(tf.zeros([outputUnitCount]))
+
 sess.run(tf.initialize_all_variables())
 
 y = tf.nn.softmax(tf.matmul(x,W) + b)
@@ -51,7 +57,7 @@ crossEntropy = -tf.reduce_sum(y_ * tf.log(y))
 trainStep = tf.train.GradientDescentOptimizer(0.01).minimize(crossEntropy)
 
 batchSize = 100
-for i in range(100000):
+for i in range(1000000):
     trainDataStartIndex = random.randrange(len(trainData)-batchSize)
     trainDataEndIndex = trainDataStartIndex + batchSize
     dataRows = trainData[trainDataStartIndex:trainDataEndIndex]
